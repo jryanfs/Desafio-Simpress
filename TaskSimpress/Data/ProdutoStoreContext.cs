@@ -1,9 +1,6 @@
 ﻿using DesafioSimpress.Entities;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using TaskSimpress.Entities.Mapeamento;
 
 namespace DesafioSimpress.Data
 {
@@ -12,7 +9,13 @@ namespace DesafioSimpress.Data
         public ProdutoStoreContext(DbContextOptions<ProdutoStoreContext> options): base(options) { 
             
         }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.HasAnnotation("Relational:Collation","pt_BR.UTF-8");
 
+            modelBuilder.ApplyConfiguration(new MapeamentoProduto());
+            modelBuilder.ApplyConfiguration(new MapeamentoCategoriaProduto());
+        }
         public DbSet<Produto> Produto { get; set; }
         public DbSet<CategoriaProduto> CategoriaProduto { get; set; }
     }

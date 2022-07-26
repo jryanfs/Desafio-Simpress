@@ -3,12 +3,7 @@ using DesafioSimpress.ViewModel;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Threading.Tasks;
-using TaskSimpress.Models;
 
 namespace TaskSimpress.Controllers
 {
@@ -30,18 +25,12 @@ namespace TaskSimpress.Controllers
         public IActionResult Index()
         {
             ProdutoViewModel model = new ProdutoViewModel();
-
             var categorias = _categoriaProdutoRepository.GetAll();
 
             model.Dropdown = categorias.Select(x => new SelectListItem { Text = x.Nome, Value = x.Id.ToString() }).ToList();
             model.Produtos = _produtoRepository.GetAll();
 
             return View(model);
-        }
-
-        public IActionResult Privacy()
-        {
-            return View();
         }
 
         public JsonResult GetProduto(int id) {
@@ -56,15 +45,9 @@ namespace TaskSimpress.Controllers
             if(produtoViewModel.Id == 0)
                 _produtoRepository.Add(produtoViewModel.ToProduto());
             else
-                _produtoRepository.Save(produtoViewModel.ToProduto());
+                _produtoRepository.Update(produtoViewModel.ToProduto());
 
             return RedirectToAction(nameof(Index));
-        }
-
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
         public IActionResult Delete(int id) 
@@ -72,7 +55,6 @@ namespace TaskSimpress.Controllers
             var produto = _produtoRepository.Get(id);
 
             _produtoRepository.Delete(produto);
-
             return RedirectToAction(nameof(Index));
         }
     }

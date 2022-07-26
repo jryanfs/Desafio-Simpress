@@ -11,7 +11,7 @@ namespace DesafioSimpress.Repositories.Interface
 
         public Produto Get(int id);
 
-        public void Save(Produto produto);
+        public void Update(Produto produto);
 
         public void Delete(Produto produto);
     }

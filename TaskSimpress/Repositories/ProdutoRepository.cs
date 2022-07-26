@@ -21,7 +21,7 @@ namespace DesafioSimpress.Repositories
             _context.SaveChanges();
         }
 
-        public void Save(Produto produto)
+        public void Update(Produto produto)
         {
             _context.Update(produto);
             _context.SaveChanges();
@@ -30,14 +30,14 @@ namespace DesafioSimpress.Repositories
         public IEnumerable<Produto> GetAll()
         {
             return _context.Set<Produto>()
-                .Include(x => x.categoria)
+                .Include(x => x.Categoria)
                 .AsNoTracking();
         }
 
         public Produto Get(int id)
         {
             return _context.Set<Produto>()
-                .Include(x => x.categoria)
+                .Include(x => x.Categoria)
                 .FirstOrDefault(x => x.Id == id);
         }
 
