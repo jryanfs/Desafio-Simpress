@@ -1,0 +1,138 @@
+﻿@model DesafioSimpress.ViewModel.ProdutoViewModel;
+
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="container-fluid">
+    <form asp-action="Save" asp-controller="Produto" method="post">
+        <input type="hidden" asp-for="Id" />
+        <div class="form-group">
+            <div class="col-md-12">
+                <div class="row">
+                    <label>Nome</label>
+                </div>
+                <div class="row form-group">
+                    <input class="form-control" asp-for="Nome" />
+                    <span asp-validation-for="Nome" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="row">
+                    <label>Descrição</label>
+                </div>
+                <div class="row form-group">
+                    <input class="form-control" asp-for="Descricao" />
+                    <span asp-validation-for="Descricao" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="row">
+                    <label>Categoria de Produto</label>
+                </div>
+                <div class="row">
+                    <select class="form-control col-sm-6" asp-for="CategoriaId">
+                        @foreach (var item in Model.Dropdown)
+                        {
+                            <option value="@item.Value">@item.Text</option>
+                        }
+                    </select>
+                    <div class="col-sm-3">
+                        <input asp-for="Perecivel" class="custom-checkbox" type="checkbox" />
+                        <label>Perecível</label>
+                    </div>
+                    <div class="col-sm-3">
+                        <button id="btnCadastrar" type="submit" class="btn btn-primary"> Cadastrar</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </form>
+</div>
+<div class="container-fluid">
+    <div id="result">
+        <div class="row">
+            <div class="col-sm-12">
+                <table class="table table-striped" id="tbProduto" width="100%">
+                    <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>Nome</th>
+                            <th>Descrição</th>
+                            <th>Categoria do produto</th>
+                            <th>Ativo</th>
+                            <th>Perecível</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.Produtos)
+                        {
+                            <tr>
+                                <td>@item.Id</td>
+                                <td>@item.Nome</td>
+                                <td>@item.Descricao</td>
+                                <td>@item.categoria.Descricao</td>
+                                @if (@item.Ativo)
+                                {
+                                    <td>Sim</td>
+                                }
+                                else
+                                {
+                                    <td>Não</td>
+                                }
+                                @if (item.Perecivel)
+                                {
+                                    <td>Sim</td>
+                                }
+                                else
+                                {
+                                    <td>Não</td>
+                                }
+                                <td>
+                                    <button id="AttButton" onclick="AttProduto(@item.Id)" class="btn btn-success"> Atualizar </button>
+
+                                    <a id="ExcButton" href="@Url.Action("Delete", "Produto", new { id = item.Id})" class="btn btn-danger"> Excluir </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    <script>
+        var AttProduto = (id) => {
+            var href = `/Produto/GetProduto/${id}`;
+            $.get(href, (response) => {
+                $("#Id").val(response.id);
+                $("#Nome").val(response.nome);
+                $("#Descricao").val(response.descricao);
+                $("#CategoriaId").val(response.categoriaId);
+                response.perecivel == true ? $('#Perecivel').attr('checked', true) : $('#Perecivel').attr('checked', false);
+            });
+        }
+
+        $("#btnCadastrar").on("click", (e) => {
+
+            var nome = $("#Nome").val();
+            var descricao = $("#Descricao").val();
+
+            if (nome == "" )
+            {
+                e.preventDefault();
+                return alert("Por favor Preencha nome!");
+            }
+            if (descricao == "")
+            {
+                e.preventDefault();
+                return alert("Por favor Preencha descricao!");
+            }
+        });
+    </script>
+}
